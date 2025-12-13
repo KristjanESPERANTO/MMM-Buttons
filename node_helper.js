@@ -1,11 +1,10 @@
 /*
  * MagicMirror²
- * Node Helper: Buttons
+ * Node Helper: MMM-Buttons
  *
  * By Joseph Bethge
  * MIT Licensed.
  *
- * Refactored to use gpiod (gpiomon) instead of onoff for native-free GPIO access.
  */
 
 const {spawn, execSync} = require("child_process");
@@ -64,9 +63,11 @@ module.exports = NodeHelper.create({
         const button = this.buttons[index];
         const activeLow = button.activeLow !== false;
 
-        // Determine if this is a press or release based on edge and activeLow setting
-        // activeLow (default): button connects to GND when pressed -> falling edge = press
-        // activeHigh: button connects to VCC when pressed -> rising edge = press
+        /*
+         * Determine if this is a press or release based on edge and activeLow setting
+         * activeLow (default): button connects to GND when pressed -> falling edge = press
+         * activeHigh: button connects to VCC when pressed -> rising edge = press
+         */
         const isPress = activeLow
             ? edge === "falling"
             : edge === "rising";

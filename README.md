@@ -57,6 +57,7 @@ The other does not do anything on a short press, but shuts down the system after
 ```js
     {
         module: "MMM-Buttons",
+        position: "bottom_left",
         config: {
             buttons: [
                 {
@@ -107,6 +108,9 @@ Here is full documentation of options for the modules configuration:
 | `maxShortPressTime` | Maximum duration to trigger a short press in `ms`. Default is `500`. |
 | `minLongPressTime` | Minimum time needed to trigger a long press in `ms`. Default is `3000`. Any press duration between `maxShortPressTime` and `minLongPressTime` does not do anything. |
 | `bounceTimeout` | Hardware debounce in milliseconds passed to `gpiomon` (`-p` flag). |
+| `debugLimit` | How many events to keep in the debug list. Default is `5`. |
+
+**Debug View:** If you set a `position` for the module (e.g., `position: "bottom_left"`), a debug list will be displayed showing recent button events with timing and actions. This is useful for testing your button setup. Remove the `position` to hide the debug view.
 
 ### Button Configuration
 

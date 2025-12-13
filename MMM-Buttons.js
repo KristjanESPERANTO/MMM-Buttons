@@ -1,6 +1,6 @@
 /*
  * MagicMirror²
- * Module: Buttons
+ * Module: MMM-Buttons
  *
  * By Joseph Bethge
  * MIT Licensed.
@@ -14,7 +14,8 @@ Module.register("MMM-Buttons", {
         minShortPressTime: 0,
         maxShortPressTime: 500,
         minLongPressTime: 3000,
-        bounceTimeout: 300
+        bounceTimeout: 300,
+        debugLimit: 5
     },
 
     // Define start sequence.
@@ -26,11 +27,43 @@ Module.register("MMM-Buttons", {
         const buttonCount = this.config.buttons.length;
         this.intervals = Array(buttonCount).fill(null);
         this.alerts = Array(buttonCount).fill(false);
+        this.eventLog = [];
     },
 
     // Override dom generator.
     getDom () {
         const wrapper = document.createElement("div");
+
+        if (this.data.position && this.eventLog.length) {
+            const title = document.createElement("div");
+            title.innerText = "MMM-Buttons debug";
+            title.style.fontWeight = "bold";
+            title.style.marginBottom = "4px";
+
+            const list = document.createElement("ul");
+            list.style.margin = "0";
+            list.style.paddingLeft = "16px";
+            list.style.fontSize = "12px";
+
+            this.eventLog.forEach((entry) => {
+                const li = document.createElement("li");
+                let text = `${entry.time} – ${entry.name || "Button"} (${entry.index}) ${entry.type}`;
+                if (entry.duration !== undefined) {
+                    text += ` (${entry.duration}ms)`;
+                }
+                if (entry.pressType) {
+                    text += ` → ${entry.pressType} press`;
+                }
+                if (entry.actions && entry.actions.length > 0) {
+                    text += `: ${entry.actions.join(", ")}`;
+                }
+                li.innerText = text;
+                list.appendChild(li);
+            });
+
+            wrapper.appendChild(title);
+            wrapper.appendChild(list);
+        }
 
         return wrapper;
     },
@@ -64,14 +97,23 @@ Module.register("MMM-Buttons", {
         const {shortPress} = this.config.buttons[index];
         const {longPress} = this.config.buttons[index];
 
+        let pressType = null;
+        let actions = [];
+
         if (shortPress && min <= duration && duration <= max) {
+            pressType = "short";
+            actions = this.getActionNames(shortPress);
             this.sendAction(shortPress);
         }
 
         min = this.config.minLongPressTime;
         if (longPress && min <= duration) {
+            pressType = "long";
+            actions = this.getActionNames(longPress);
             this.sendAction(longPress);
         }
+
+        this.logEvent("up", index, duration, pressType, actions);
     },
 
     sendAction (description) {
@@ -82,6 +124,47 @@ Module.register("MMM-Buttons", {
                 Log.debug(`${this.name}: No frontend notification configured for this action (this is OK if handled by node_helper)`);
             }
         }
+    },
+
+    getActionNames (description) {
+        const names = [];
+        for (const action of description) {
+            if (action?.notification) {
+                let name = action.notification;
+                // Add payload action if available for more detail
+                if (action.payload?.action) {
+                    name += `(${action.payload.action})`;
+                }
+                names.push(name);
+            }
+        }
+        return names;
+    },
+
+    logEvent (type, index, duration, pressType, actions) {
+        if (!this.data.position) {
+            return;
+        }
+
+        const button = this.config.buttons[index] || {};
+        const timestamp = new Date();
+        const time = timestamp.toLocaleTimeString();
+
+        this.eventLog.push({
+            type,
+            index,
+            name: button.name,
+            duration,
+            pressType,
+            actions,
+            time
+        });
+
+        if (this.eventLog.length > this.config.debugLimit) {
+            this.eventLog.shift();
+        }
+
+        this.updateDom();
     },
 
     buttonDown (index) {
@@ -113,6 +196,7 @@ Module.register("MMM-Buttons", {
         }
         if (notification === "BUTTON_DOWN") {
             this.buttonDown(payload.index);
+            this.logEvent("down", payload.index);
         }
     }
 });
