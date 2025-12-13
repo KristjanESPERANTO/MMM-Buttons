@@ -1,6 +1,5 @@
-/* global Module */
-
-/* MagicMirror²
+/*
+ * MagicMirror²
  * Module: Buttons
  *
  * By Joseph Bethge
@@ -33,7 +32,7 @@ Module.register("MMM-Buttons", {
                         notification: "",
                         payload: ""
                     }
-                ],
+                ]
             }
         ],
         minShortPressTime: 0,
@@ -44,29 +43,26 @@ Module.register("MMM-Buttons", {
 
     // Define start sequence.
     start () {
-        Log.info("Starting module: " + this.name);
+        Log.info(`Starting module: ${this.name}`);
 
         this.sendConfig();
 
-        this.intervals = [];
-        this.alerts = [];
-        for (var i = 0; i < this.config.buttons.length; i++)
-        {
-            this.intervals.push(undefined);
-            this.alerts.push(false);
-        }
+        const buttonCount = this.config.buttons.length;
+        this.intervals = Array(buttonCount).fill(null);
+        this.alerts = Array(buttonCount).fill(false);
     },
 
     // Override dom generator.
     getDom () {
-        var wrapper = document.createElement("div");
+        const wrapper = document.createElement("div");
 
         return wrapper;
     },
 
-    /* sendConfig()
-   * initialize backend
-   */
+    /*
+     * sendConfig()
+     * initialize backend
+     */
     sendConfig () {
         this.sendSocketNotification("BUTTON_CONFIG", {
             config: this.config
@@ -76,53 +72,46 @@ Module.register("MMM-Buttons", {
     buttonUp (index, duration) {
         if (this.alerts[index]) {
             // alert already shown, clear interval to update it and hide it
-            if (this.intervals[index] !== undefined) {
+            if (this.intervals[index] !== null) {
                 clearInterval(this.intervals[index]);
             }
             this.alerts[index] = false;
             this.sendNotification("HIDE_ALERT");
-        } else {
+        } else if (this.intervals[index] !== null) {
             // no alert shown, clear time out for showing it
-            if (this.intervals[index] !== undefined) {
-                clearTimeout(this.intervals[index]);
-            }
+            clearTimeout(this.intervals[index]);
         }
-        this.intervals[index] = undefined;
+        this.intervals[index] = null;
 
-        var min = this.config.minShortPressTime;
-        var max = this.config.maxShortPressTime;
-        var shortPress = this.config.buttons[index].shortPress
-        var longPress = this.config.buttons[index].longPress
+        let min = this.config.minShortPressTime;
+        const max = this.config.maxShortPressTime;
+        const {shortPress} = this.config.buttons[index];
+        const {longPress} = this.config.buttons[index];
 
-        if (shortPress && min <= duration && duration <= max)
-        {
+        if (shortPress && min <= duration && duration <= max) {
             this.sendAction(shortPress);
         }
 
         min = this.config.minLongPressTime;
-        if (longPress && min <= duration)
-        {
+        if (longPress && min <= duration) {
             this.sendAction(longPress);
         }
     },
 
     sendAction (description) {
-        for (var i = 0; i < description.length; i++) {
-            if (description[i] && description[i].notification) {
-                this.sendNotification(description[i].notification, description[i].payload);
+        for (const action of description) {
+            if (action?.notification) {
+                this.sendNotification(action.notification, action.payload);
             } else {
-                Log.debug(this.name + ": No frontend notification configured for this action (this is OK if handled by node_helper)");
+                Log.debug(`${this.name}: No frontend notification configured for this action (this is OK if handled by node_helper)`);
             }
         }
     },
 
     buttonDown (index) {
-        var self = this;
-
-        if (self.config.buttons[index].longPress && self.config.buttons[index].longPress.title)
-        {
-            this.intervals[index] = setTimeout(function () {
-                self.startAlert(index);
+        if (this.config.buttons[index].longPress?.title) {
+            this.intervals[index] = setTimeout(() => {
+                this.startAlert(index);
             }, this.config.maxShortPressTime);
         }
     },
@@ -143,13 +132,11 @@ Module.register("MMM-Buttons", {
 
     // Override socket notification handler.
     socketNotificationReceived (notification, payload) {
-        if (notification === "BUTTON_UP")
-        {
+        if (notification === "BUTTON_UP") {
             this.buttonUp(payload.index, payload.duration);
         }
-        if (notification === "BUTTON_DOWN")
-        {
+        if (notification === "BUTTON_DOWN") {
             this.buttonDown(payload.index);
         }
-    },
+    }
 });

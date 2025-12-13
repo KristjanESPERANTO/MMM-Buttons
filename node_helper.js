@@ -1,4 +1,5 @@
-/* MagicMirror²
+/*
+ * MagicMirror²
  * Node Helper: Buttons
  *
  * By Joseph Bethge
@@ -7,7 +8,7 @@
  * Refactored to use gpiod (gpiomon) instead of onoff for native-free GPIO access.
  */
 
-const { spawn, execSync } = require("child_process");
+const {spawn, execSync} = require("child_process");
 const Log = require("logger");
 const NodeHelper = require("node_helper");
 const fs = require("fs");
@@ -15,7 +16,7 @@ const fs = require("fs");
 module.exports = NodeHelper.create({
     // Subclass start method.
     start () {
-        Log.log("Starting node helper for: " + this.name);
+        Log.log(`Starting node helper for: ${this.name}`);
 
         this.loaded = false;
         this.monitors = [];
@@ -25,17 +26,17 @@ module.exports = NodeHelper.create({
     checkGpioAvailable () {
         // Check if we're on Linux
         if (process.platform !== "linux") {
-            Log.warn(this.name + ": Not running on Linux - GPIO functionality disabled");
+            Log.warn(`${this.name}: Not running on Linux - GPIO functionality disabled`);
             return false;
         }
 
         // Check if gpiomon is installed
         try {
-            execSync("which gpiomon", { stdio: "ignore" });
+            execSync("which gpiomon", {stdio: "ignore"});
             return true;
         } catch {
-            Log.error(this.name + ": gpiod tools not found!");
-            Log.error(this.name + ": Install with: sudo apt install gpiod");
+            Log.error(`${this.name}: gpiod tools not found!`);
+            Log.error(`${this.name}: Install with: sudo apt install gpiod`);
             return false;
         }
     },
@@ -73,103 +74,103 @@ module.exports = NodeHelper.create({
         if (isPress) {
             if (button.downBounceTimeoutEnd > now) {
                 // We're bouncing!
-                Log.debug(this.name + ": Ignoring bounce on button " + index);
+                Log.debug(`${this.name}: Ignoring bounce on button ${index}`);
                 return;
             }
 
             button.pressed = now;
             button.downBounceTimeoutEnd = now + this.config.bounceTimeout;
-            Log.debug(this.name + ": Button " + index + " (" + button.name + ") pressed");
-            this.sendSocketNotification("BUTTON_DOWN", { index: index });
-        } else if (button.pressed !== undefined) {
+            Log.debug(`${this.name}: Button ${index} (${button.name}) pressed`);
+            this.sendSocketNotification("BUTTON_DOWN", {index});
+        } else if (button.pressed !== null) {
             if (button.upBounceTimeoutEnd > now) {
                 // We're bouncing!
                 return;
             }
 
             const duration = now - button.pressed;
-            button.pressed = undefined;
+            button.pressed = null;
             button.upBounceTimeoutEnd = now + this.config.bounceTimeout;
 
-            Log.debug(this.name + ": Button " + index + " (" + button.name + ") released after " + duration + "ms");
+            Log.debug(`${this.name}: Button ${index} (${button.name}) released after ${duration}ms`);
             this.sendSocketNotification("BUTTON_UP", {
-                index: index,
-                duration: duration
+                index,
+                duration
             });
         }
     },
 
     getGpioChip () {
-        // Detect the correct gpiochip for the platform
-        // RPi5 uses gpiochip4 for GPIO header, older RPis use gpiochip0
+        /*
+         * Detect the correct gpiochip for the platform
+         * RPi5 uses gpiochip4 for GPIO header, older RPis use gpiochip0
+         */
         let model = "";
         try {
-            model = fs.readFileSync("/proc/device-tree/model", { encoding: "utf8" });
-        } catch (e) {
+            model = fs.readFileSync("/proc/device-tree/model", {encoding: "utf8"});
+        } catch {
             // Fallback to gpiochip0
         }
 
         if (model.startsWith("Raspberry Pi 5")) {
-            Log.log(this.name + ": RPi5 detected, using gpiochip4");
+            Log.log(`${this.name}: RPi5 detected, using gpiochip4`);
             return "gpiochip4";
         }
 
         return "gpiochip0";
     },
 
+    parseGpiomonOutput (data, index, pin) {
+        /*
+         * libgpiod 2.x output format: "<timestamp> <edge> <line>"
+         * e.g., "1702483200.123456789 rising 24"
+         */
+        const lines = data.toString().trim().split("\n");
+        for (const line of lines) {
+            Log.debug(`${this.name}: gpiomon output for pin ${pin}: ${line}`);
+            let edge = null;
+            if (line.includes("rising")) {
+                edge = "rising";
+            } else if (line.includes("falling")) {
+                edge = "falling";
+            }
+            if (edge) {
+                Log.debug(`${this.name}: GPIO event on pin ${pin}: ${edge}`);
+                this.handleGpioEvent(index, edge);
+            }
+        }
+    },
+
     initializeButton (index) {
-        const self = this;
         const button = this.buttons[index];
         const chip = this.gpioChip;
-        const pin = parseInt(button.pin);
+        const pin = parseInt(button.pin, 10);
 
-        // Build gpiomon arguments for libgpiod 2.x
-        // Format: gpiomon -c <chip> -e both <line>
-        // -c = chip, -e = edges (both is default, so we can omit it)
-        const args = [
-            "-c", chip,
-            String(pin)
-        ];
+        // gpiomon args for libgpiod 2.x: gpiomon -c <chip> <line>
+        const args = ["-c", chip, String(pin)];
 
-        Log.log(self.name + ": Starting gpiomon for pin " + pin + " on " + chip);
+        Log.log(`${this.name}: Starting gpiomon for pin ${pin} on ${chip}`);
 
         const monitor = spawn("gpiomon", args);
 
-        monitor.stdout.on("data", (data) => {
-            // libgpiod 2.x output format: "<timestamp> <edge> <line>"
-            // e.g., "1702483200.123456789 rising 24"
-            const lines = data.toString().trim().split("\n");
-            for (const line of lines) {
-                Log.debug(self.name + ": gpiomon output for pin " + pin + ": " + line);
-                let edge = null;
-                if (line.includes("rising")) {
-                    edge = "rising";
-                } else if (line.includes("falling")) {
-                    edge = "falling";
-                }
-                if (edge) {
-                    Log.debug(self.name + ": GPIO event on pin " + pin + ": " + edge);
-                    self.handleGpioEvent(index, edge);
-                }
-            }
-        });
+        monitor.stdout.on("data", (data) => this.parseGpiomonOutput(data, index, pin));
 
         monitor.stderr.on("data", (data) => {
-            Log.error(self.name + ": gpiomon error for pin " + pin + ": " + data.toString());
+            Log.error(`${this.name}: gpiomon error for pin ${pin}: ${data.toString()}`);
         });
 
         monitor.on("close", (code) => {
             if (code !== null && code !== 0) {
-                Log.error(self.name + ": gpiomon for pin " + pin + " exited with code " + code);
+                Log.error(`${this.name}: gpiomon for pin ${pin} exited with code ${code}`);
             }
         });
 
         monitor.on("error", (err) => {
-            Log.error(self.name + ": Failed to start gpiomon for pin " + pin + ": " + err.message);
-            Log.error(self.name + ": Make sure gpiod is installed: sudo apt install gpiod");
+            Log.error(`${this.name}: Failed to start gpiomon for pin ${pin}: ${err.message}`);
+            Log.error(`${this.name}: Make sure gpiod is installed: sudo apt install gpiod`);
         });
 
-        this.monitors.push({ pin: pin, process: monitor });
+        this.monitors.push({pin, process: monitor});
     },
 
     initializeButtons () {
@@ -178,20 +179,20 @@ module.exports = NodeHelper.create({
         }
 
         if (!this.gpioAvailable) {
-            Log.warn(this.name + ": Skipping button initialization - GPIO not available");
+            Log.warn(`${this.name}: Skipping button initialization - GPIO not available`);
             return;
         }
 
         this.buttons = this.config.buttons;
         this.gpioChip = this.getGpioChip();
 
-        for (let i = 0; i < this.buttons.length; i++) {
-            Log.log("Initialize button " + this.buttons[i].name + " on PIN " + this.buttons[i].pin);
-            this.buttons[i].pressed = undefined;
-            this.buttons[i].downBounceTimeoutEnd = 0;
-            this.buttons[i].upBounceTimeoutEnd = 0;
-            this.initializeButton(i);
-        }
+        this.buttons.forEach((button, index) => {
+            Log.log(`Initialize button ${button.name} on PIN ${button.pin}`);
+            button.pressed = null;
+            button.downBounceTimeoutEnd = 0;
+            button.upBounceTimeoutEnd = 0;
+            this.initializeButton(index);
+        });
 
         this.loaded = true;
     }
