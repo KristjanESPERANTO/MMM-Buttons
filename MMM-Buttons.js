@@ -10,31 +10,7 @@ Module.register("MMM-Buttons", {
 
     // Default module config.
     defaults: {
-        buttons: [
-            {
-                pin: 24,
-                activeLow: false,
-                name: "Button",
-                shortPress: [
-                    {
-                        title: "",
-                        message: "",
-                        imageFA: "",
-                        notification: "",
-                        payload: ""
-                    }
-                ],
-                longPress: [
-                    {
-                        title: "",
-                        message: "",
-                        imageFA: "",
-                        notification: "",
-                        payload: ""
-                    }
-                ]
-            }
-        ],
+        buttons: [],
         minShortPressTime: 0,
         maxShortPressTime: 500,
         minLongPressTime: 3000,
