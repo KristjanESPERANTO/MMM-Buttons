@@ -55,45 +55,45 @@ One switches on the display on a short press, and switches it off on a long pres
 The other does not do anything on a short press, but shuts down the system after keeping it pressed for 3 seconds with an explanatory user alert.
 
 ```js
-{
-    module: "MMM-Buttons",
-    config: {
-        buttons: [
-            {
-                pin: 25,
-                name: "monitor_control",
-                longPress: [
-                    {
-                        notification: "REMOTE_ACTION",
-                        payload: {action: "MONITOROFF"}
-                    }
-                ],
-                shortPress: [
-                    {
-                        notification: "REMOTE_ACTION",
-                        payload: {action: "MONITORON"}
-                    }
-                ]
-            },
-            {
-                pin: 24,
-                name: "power",
-                longPress: [
-                    {
-                        title: "Power off",
-                        message: "Keep pressed for 3 seconds to shut down",
-                        imageFA: "power-off",
-                        notification: "REMOTE_ACTION",
-                        payload: {action: "SHUTDOWN"}
-                    }
-                ],
-                shortPress: [
-                    undefined
-                ]
-            }
-        ]
-    }
-},
+    {
+        module: "MMM-Buttons",
+        config: {
+            buttons: [
+                {
+                    pin: 25,
+                    name: "monitor_control",
+                    longPress: [
+                        {
+                            notification: "REMOTE_ACTION",
+                            payload: {action: "MONITOROFF"}
+                        }
+                    ],
+                    shortPress: [
+                        {
+                            notification: "REMOTE_ACTION",
+                            payload: {action: "MONITORON"}
+                        }
+                    ]
+                },
+                {
+                    pin: 24,
+                    name: "power",
+                    longPress: [
+                        {
+                            title: "Power off",
+                            message: "Keep pressed for 3 seconds to shut down",
+                            imageFA: "power-off",
+                            notification: "REMOTE_ACTION",
+                            payload: {action: "SHUTDOWN"}
+                        }
+                    ],
+                    shortPress: [
+                        undefined
+                    ]
+                }
+            ]
+        }
+    },
 ```
 
 ### Module Configuration
@@ -106,7 +106,7 @@ Here is full documentation of options for the modules configuration:
 | `minShortPressTime` | Minimum duration to trigger a short press in `ms`. Default is `0`. |
 | `maxShortPressTime` | Maximum duration to trigger a short press in `ms`. Default is `500`. |
 | `minLongPressTime` | Minimum time needed to trigger a long press in `ms`. Default is `3000`. Any press duration between `maxShortPressTime` and `minLongPressTime` does not do anything. |
-| `bounceTimeout` | Duration to ignore bouncing (unintentional double press on the button). |
+| `bounceTimeout` | Hardware debounce in milliseconds passed to `gpiomon` (`-p` flag). |
 
 ### Button Configuration
 

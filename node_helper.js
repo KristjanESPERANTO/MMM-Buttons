@@ -72,25 +72,12 @@ module.exports = NodeHelper.create({
             : edge === "rising";
 
         if (isPress) {
-            if (button.downBounceTimeoutEnd > now) {
-                // We're bouncing!
-                Log.debug(`${this.name}: Ignoring bounce on button ${index}`);
-                return;
-            }
-
             button.pressed = now;
-            button.downBounceTimeoutEnd = now + this.config.bounceTimeout;
             Log.debug(`${this.name}: Button ${index} (${button.name}) pressed`);
             this.sendSocketNotification("BUTTON_DOWN", {index});
         } else if (button.pressed !== null) {
-            if (button.upBounceTimeoutEnd > now) {
-                // We're bouncing!
-                return;
-            }
-
             const duration = now - button.pressed;
             button.pressed = null;
-            button.upBounceTimeoutEnd = now + this.config.bounceTimeout;
 
             Log.debug(`${this.name}: Button ${index} (${button.name}) released after ${duration}ms`);
             this.sendSocketNotification("BUTTON_UP", {
@@ -145,11 +132,12 @@ module.exports = NodeHelper.create({
         const button = this.buttons[index];
         const chip = this.gpioChip;
         const pin = parseInt(button.pin, 10);
+        const debounce = `${this.config.bounceTimeout}ms`;
 
-        // gpiomon args for libgpiod 2.x: gpiomon -c <chip> <line>
-        const args = ["-c", chip, String(pin)];
+        // gpiomon args for libgpiod 2.x with hardware debouncing
+        const args = ["-c", chip, "-p", debounce, String(pin)];
 
-        Log.log(`${this.name}: Starting gpiomon for pin ${pin} on ${chip}`);
+        Log.log(`${this.name}: Starting gpiomon for pin ${pin} on ${chip} (debounce: ${debounce})`);
 
         const monitor = spawn("gpiomon", args);
 
@@ -189,8 +177,6 @@ module.exports = NodeHelper.create({
         this.buttons.forEach((button, index) => {
             Log.log(`Initialize button ${button.name} on PIN ${button.pin}`);
             button.pressed = null;
-            button.downBounceTimeoutEnd = 0;
-            button.upBounceTimeoutEnd = 0;
             this.initializeButton(index);
         });
 
