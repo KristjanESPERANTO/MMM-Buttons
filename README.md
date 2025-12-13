@@ -36,6 +36,15 @@ cd MMM-Buttons
 
 That's it! No `npm install` needed - this module has no external Node.js dependencies.
 
+### Update the module
+
+To update the module, navigate to the module directory and pull the latest changes from GitHub:
+
+```bash
+cd ~/MagicMirror/modules/MMM-Buttons
+git pull
+```
+
 ## Configuration
 
 Add the module to your modules array in your `config.js`.
