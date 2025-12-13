@@ -108,7 +108,11 @@ Module.register("MMM-Buttons", {
 
     sendAction (description) {
         for (var i = 0; i < description.length; i++) {
-            this.sendNotification(description[i].notification, description[i].payload);
+            if (description[i] && description[i].notification) {
+                this.sendNotification(description[i].notification, description[i].payload);
+            } else {
+                Log.debug(this.name + ": No frontend notification configured for this action (this is OK if handled by node_helper)");
+            }
         }
     },
 

@@ -73,11 +73,13 @@ module.exports = NodeHelper.create({
         if (isPress) {
             if (button.downBounceTimeoutEnd > now) {
                 // We're bouncing!
+                Log.debug(this.name + ": Ignoring bounce on button " + index);
                 return;
             }
 
             button.pressed = now;
             button.downBounceTimeoutEnd = now + this.config.bounceTimeout;
+            Log.debug(this.name + ": Button " + index + " (" + button.name + ") pressed");
             this.sendSocketNotification("BUTTON_DOWN", { index: index });
         } else if (button.pressed !== undefined) {
             if (button.upBounceTimeoutEnd > now) {
@@ -89,6 +91,7 @@ module.exports = NodeHelper.create({
             button.pressed = undefined;
             button.upBounceTimeoutEnd = now + this.config.bounceTimeout;
 
+            Log.debug(this.name + ": Button " + index + " (" + button.name + ") released after " + duration + "ms");
             this.sendSocketNotification("BUTTON_UP", {
                 index: index,
                 duration: duration
@@ -137,6 +140,7 @@ module.exports = NodeHelper.create({
             // e.g., "1702483200.123456789 rising 24"
             const lines = data.toString().trim().split("\n");
             for (const line of lines) {
+                Log.debug(self.name + ": gpiomon output for pin " + pin + ": " + line);
                 let edge = null;
                 if (line.includes("rising")) {
                     edge = "rising";
@@ -144,6 +148,7 @@ module.exports = NodeHelper.create({
                     edge = "falling";
                 }
                 if (edge) {
+                    Log.debug(self.name + ": GPIO event on pin " + pin + ": " + edge);
                     self.handleGpioEvent(index, edge);
                 }
             }
