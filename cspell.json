@@ -1,0 +1,32 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "activeLow",
+    "Bethge",
+    "bounceTimeout",
+    "gpiochip",
+    "gpiod",
+    "gpiomon",
+    "imageFA",
+    "jopyth",
+    "Landis",
+    "libgpiod",
+    "longPress",
+    "MagicMirror",
+    "maxShortPressTime",
+    "minLongPressTime",
+    "minShortPressTime",
+    "MONITOROFF",
+    "MONITORON",
+    "onoff",
+    "pathspec",
+    "shortPress",
+    "socketclient"
+  ],
+  "ignorePaths": [
+    "node_modules",
+    "package-lock.json",
+    ".git"
+  ]
+}

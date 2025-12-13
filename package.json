@@ -18,5 +18,11 @@
   "bugs": {
     "url": "git+https://github.com/jopyth/MMM-Buttons/issues"
   },
-  "homepage": "git+https://github.com/jopyth/MMM-Buttons#readme"
+  "homepage": "git+https://github.com/jopyth/MMM-Buttons#readme",
+  "devDependencies": {
+    "cspell": "^9.4.0"
+  },
+  "scripts": {
+    "spellcheck": "cspell --no-progress \"**/*\""
+  }
 }

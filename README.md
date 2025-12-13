@@ -11,8 +11,8 @@ However it only sends out notifications to other modules.
 
 For example this can be used to send notifications to the following modules:
 
-- [Remote Control](https://forum.magicmirror.builders/topic/735/remote-control-shutdown-configure-and-update-your-magicmirror)
-- [Profile Switcher](https://forum.magicmirror.builders/topic/1402/mmm-profileswitcher-a-profile-user-layout-switching-module)
+- [MMM-Remote-Control](https://github.com/Jopyth/MMM-Remote-Control)
+- [MMM-ProfileSwitcher](https://github.com/BigMac1999/MMM-ProfileSwitcher)
 
 ## Installation
 
@@ -40,7 +40,7 @@ That's it! No `npm install` needed - this module has no external Node.js depende
 
 Add the module to your modules array in your `config.js`.
 
-Below is a simple example (needs [Remote Control](https://forum.magicmirror.builders/topic/735/remote-control-shutdown-configure-and-update-your-magicmirror) installed), with two buttons conneted, on pins 24 and 25.
+Below is a simple example (needs [MMM-Remote-Control](https://github.com/Jopyth/MMM-Remote-Control) installed), with two buttons connected, on pins 24 and 25.
 
 One switches on the display on a short press, and switches it off on a long press.
 The other does not do anything on a short press, but shuts down the system after keeping it pressed for 3 seconds with an explanatory user alert.
@@ -97,7 +97,7 @@ Here is full documentation of options for the modules configuration:
 | `minShortPressTime` | Minimum duration to trigger a short press in `ms`. Default is `0`. |
 | `maxShortPressTime` | Maximum duration to trigger a short press in `ms`. Default is `500`. |
 | `minLongPressTime` | Minimum time needed to trigger a long press in `ms`. Default is `3000`. Any press duration between `maxShortPressTime` and `minLongPressTime` does not do anything. |
-| `bounceTimeout` | Duration to ignore bouncing (unintentional doubble press on the button). |
+| `bounceTimeout` | Duration to ignore bouncing (unintentional double press on the button). |
 
 ### Button Configuration
 

@@ -65,7 +65,7 @@ Module.register("MMM-Buttons", {
     },
 
     /* sendConfig()
-   * intialize backend
+   * initialize backend
    */
     sendConfig () {
         this.sendSocketNotification("BUTTON_CONFIG", {
