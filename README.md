@@ -16,14 +16,25 @@ For example this can be used to send notifications to the following modules:
 
 ## Installation
 
-Clone this repository into your `modules` directory and install the dependencies:
+### Prerequisites
+
+This module requires `gpiod` tools to be installed on your Raspberry Pi:
+
+```bash
+sudo apt install gpiod
+```
+
+### Install the module
+
+Clone this repository into your `modules` directory:
 
 ```bash
 cd ~/MagicMirror/modules # adapt directory if you are using a different one
 git clone https://github.com/MarcLandis/MMM-Buttons
 cd MMM-Buttons
-npm install # this can take a while
 ```
+
+That's it! No `npm install` needed - this module has no external Node.js dependencies.
 
 ## Configuration
 
@@ -96,6 +107,7 @@ Each button configuration is an object with the following properties:
 | ------------- | ------------- |
 | `pin` | Pin number of the button input (use [**BCM** numbering](http://raspberrypi.stackexchange.com/a/12967)). |
 | `name` | Name of the button for easier identification and log output. |
+| `activeLow` | Set to `true` if your button is active low (connects to GND when pressed, which is the typical setup with internal pull-up resistors). Set to `false` for active high buttons. Default is `true`. |
 | `longPress` | Choose what notification to send on a long press. See [Notification Configuration](README.md#Notification-Configuration) below. Use `undefined` if nothing should trigger. |
 | `shortPress` | Choose what notification to send on a short press. See [Notification Configuration](README.md#Notification-Configuration) below. Use `undefined` if nothing should trigger. |
 

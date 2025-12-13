@@ -1,6 +1,6 @@
 {
   "name": "mmm-buttons",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A module for connecting multiple buttons.",
   "repository": {
     "type": "git",
@@ -18,16 +18,5 @@
   "bugs": {
     "url": "git+https://github.com/jopyth/MMM-Buttons/issues"
   },
-  "homepage": "git+https://github.com/jopyth/MMM-Buttons#readme",
-  "scripts": {
-    "postinstall": "node_modules/.bin/electron-rebuild -e ../../node_modules/electron"
-  },
-  "dependencies": {
-    "@electron/rebuild": "^3.7.0",
-    "nan": "^2.22.0",
-    "onoff": "^6.0.3"
-  },
-  "resolutions": {
-    "nan": "github:jkleinsc/nan#remove_accessor_signature"
-  }
+  "homepage": "git+https://github.com/jopyth/MMM-Buttons#readme"
 }
