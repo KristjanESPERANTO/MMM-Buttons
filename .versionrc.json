@@ -1,0 +1,12 @@
+{
+  "types": [
+    {"type": "feat", "section": "Features"},
+    {"type": "fix", "section": "Bug Fixes"},
+    {"type": "chore", "section": "Maintenance", "hidden": false},
+    {"type": "docs", "section": "Documentation", "hidden": false},
+    {"type": "style", "section": "Styling", "hidden": true},
+    {"type": "refactor", "section": "Code Refactoring", "hidden": false},
+    {"type": "perf", "section": "Performance", "hidden": false},
+    {"type": "test", "section": "Tests", "hidden": true}
+  ]
+}

@@ -160,3 +160,7 @@ Please see the [Code of Conduct](CODE_OF_CONDUCT.md). By contributing you agree 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
+
+## Changelog
+
+All notable changes to this project will be documented in the [CHANGELOG.md](CHANGELOG.md) file.

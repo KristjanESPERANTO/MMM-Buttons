@@ -13,7 +13,9 @@
     "module"
   ],
   "author": "Joseph Bethge",
-  "contributors": ["https://github.com/jopyth/MMM-Buttons/graphs/contributors"],
+  "contributors": [
+    "https://github.com/jopyth/MMM-Buttons/graphs/contributors"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "git+https://github.com/jopyth/MMM-Buttons/issues"
@@ -22,6 +24,7 @@
   "devDependencies": {
     "@eslint/markdown": "^7.5.1",
     "@stylistic/eslint-plugin": "^5.6.1",
+    "commit-and-tag-version": "^12.6.1",
     "cspell": "^9.4.0",
     "eslint": "^9.39.2",
     "globals": "^16.5.0"
@@ -29,6 +32,9 @@
   "scripts": {
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "spellcheck": "cspell --no-progress \"**/*\""
+    "spellcheck": "cspell --no-progress \"**/*\"",
+    "release": "commit-and-tag-version",
+    "release:minor": "commit-and-tag-version --release-as minor",
+    "release:major": "commit-and-tag-version --release-as major"
   }
 }
