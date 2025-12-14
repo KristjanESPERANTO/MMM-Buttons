@@ -168,7 +168,8 @@ Module.register("MMM-Buttons", {
     },
 
     buttonDown (index) {
-        if (this.config.buttons[index].longPress?.title) {
+        const longPressConfig = this.config.buttons[index].longPress?.[0];
+        if (longPressConfig?.title) {
             this.intervals[index] = setTimeout(() => {
                 this.startAlert(index);
             }, this.config.maxShortPressTime);
@@ -176,11 +177,12 @@ Module.register("MMM-Buttons", {
     },
 
     showAlert (index) {
-    // display the message
+        const longPressConfig = this.config.buttons[index].longPress?.[0];
+        // display the message
         this.sendNotification("SHOW_ALERT", {
-            title: this.config.buttons[index].longPress.title,
-            message: this.config.buttons[index].longPress.message,
-            imageFA: this.config.buttons[index].longPress.imageFA
+            title: longPressConfig.title,
+            message: longPressConfig.message,
+            imageFA: longPressConfig.imageFA
         });
     },
 
