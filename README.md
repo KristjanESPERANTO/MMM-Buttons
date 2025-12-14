@@ -18,7 +18,7 @@ For example this can be used to send notifications to the following modules:
 
 ### Prerequisites
 
-This module requires `gpiod` tools to be installed on your Raspberry Pi:
+This module uses `gpiod` tools for GPIO access, which is usually pre-installed on Raspberry Pi OS. If not, you can install it with:
 
 ```bash
 sudo apt install gpiod
