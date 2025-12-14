@@ -48,7 +48,7 @@ Module.register("MMM-Buttons", {
             this.eventLog.forEach((entry) => {
                 const li = document.createElement("li");
                 let text = `${entry.time} – ${entry.name || "Button"} (${entry.index}) ${entry.type}`;
-                if (entry.duration !== undefined) {
+                if (Number.isFinite(entry.duration)) {
                     text += ` (${entry.duration}ms)`;
                 }
                 if (entry.pressType) {
@@ -78,7 +78,7 @@ Module.register("MMM-Buttons", {
         });
     },
 
-    buttonUp (index, duration) {
+    handleAlertOnRelease (index) {
         if (this.alerts[index]) {
             // alert already shown, clear interval to update it and hide it
             if (this.intervals[index] !== null) {
@@ -91,29 +91,29 @@ Module.register("MMM-Buttons", {
             clearTimeout(this.intervals[index]);
         }
         this.intervals[index] = null;
+    },
 
-        let min = this.config.minShortPressTime;
+    processButtonPress (index, duration) {
+        const {shortPress, longPress} = this.config.buttons[index];
         const max = this.config.maxShortPressTime;
-        const {shortPress} = this.config.buttons[index];
-        const {longPress} = this.config.buttons[index];
 
-        let pressType = null;
-        let actions = [];
-
-        if (shortPress && min <= duration && duration <= max) {
-            pressType = "short";
-            actions = this.getActionNames(shortPress);
+        if (shortPress && this.config.minShortPressTime <= duration && duration <= max) {
             this.sendAction(shortPress);
+            return {pressType: "short", actions: this.getActionNames(shortPress)};
         }
 
-        min = this.config.minLongPressTime;
-        if (longPress && min <= duration) {
-            pressType = "long";
-            actions = this.getActionNames(longPress);
+        if (longPress && this.config.minLongPressTime <= duration) {
             this.sendAction(longPress);
+            return {pressType: "long", actions: this.getActionNames(longPress)};
         }
 
-        this.logEvent("up", index, duration, pressType, actions);
+        return {pressType: null, actions: []};
+    },
+
+    buttonUp (index, duration) {
+        this.handleAlertOnRelease(index);
+        const {pressType, actions} = this.processButtonPress(index, duration);
+        this.logEvent({type: "up", index, duration, pressType, actions});
     },
 
     sendAction (description) {
@@ -141,22 +141,21 @@ Module.register("MMM-Buttons", {
         return names;
     },
 
-    logEvent (type, index, duration, pressType, actions) {
+    logEvent (event) {
         if (!this.data.position) {
             return;
         }
 
-        const button = this.config.buttons[index] || {};
-        const timestamp = new Date();
-        const time = timestamp.toLocaleTimeString();
+        const button = this.config.buttons[event.index] || {};
+        const time = new Date().toLocaleTimeString();
 
         this.eventLog.push({
-            type,
-            index,
+            type: event.type,
+            index: event.index,
             name: button.name,
-            duration,
-            pressType,
-            actions,
+            duration: event.duration,
+            pressType: event.pressType,
+            actions: event.actions,
             time
         });
 
@@ -198,7 +197,7 @@ Module.register("MMM-Buttons", {
         }
         if (notification === "BUTTON_DOWN") {
             this.buttonDown(payload.index);
-            this.logEvent("down", payload.index);
+            this.logEvent({type: "down", index: payload.index});
         }
     }
 });
