@@ -12,7 +12,7 @@ Module.register("MMM-Buttons", {
     defaults: {
         buttons: [],
         minShortPressTime: 0,
-        maxShortPressTime: 500,
+        maxShortPressTime: 1000,
         minLongPressTime: 3000,
         bounceTimeout: 300,
         debugLimit: 5

@@ -87,9 +87,6 @@ The other does not do anything on a short press, but shuts down the system after
                             notification: "REMOTE_ACTION",
                             payload: {action: "SHUTDOWN"}
                         }
-                    ],
-                    shortPress: [
-                        undefined
                     ]
                 }
             ]
@@ -105,7 +102,7 @@ Here is full documentation of options for the modules configuration:
 | ------------- | ------------- |
 | `buttons` | An array of button configurations. See [Button Configuration](README.md#Button-Configuration) below. Default is `[]` (no buttons registered). |
 | `minShortPressTime` | Minimum duration to trigger a short press in `ms`. Default is `0`. |
-| `maxShortPressTime` | Maximum duration to trigger a short press in `ms`. Default is `500`. |
+| `maxShortPressTime` | Maximum duration to trigger a short press in `ms`. Default is `1000`. |
 | `minLongPressTime` | Minimum time needed to trigger a long press in `ms`. Default is `3000`. Any press duration between `maxShortPressTime` and `minLongPressTime` does not do anything. |
 | `bounceTimeout` | Hardware debounce in milliseconds passed to `gpiomon` (`-p` flag). |
 | `debugLimit` | How many events to keep in the debug list. Default is `5`. |
@@ -121,8 +118,8 @@ Each button configuration is an object with the following properties:
 | `pin` | Pin number of the button input (use [**BCM** numbering](http://raspberrypi.stackexchange.com/a/12967)). |
 | `name` | Name of the button for easier identification and log output. |
 | `activeLow` | Set to `true` if your button is active low (connects to GND when pressed, which is the typical setup with internal pull-up resistors). Set to `false` for active high buttons. Default is `true`. |
-| `longPress` | Choose what notification to send on a long press. See [Notification Configuration](README.md#Notification-Configuration) below. Use `undefined` if nothing should trigger. |
-| `shortPress` | Choose what notification to send on a short press. See [Notification Configuration](README.md#Notification-Configuration) below. Use `undefined` if nothing should trigger. |
+| `longPress` | Choose what notification to send on a long press. See [Notification Configuration](README.md#Notification-Configuration) below. Omit if nothing should trigger. |
+| `shortPress` | Choose what notification to send on a short press. See [Notification Configuration](README.md#Notification-Configuration) below. Omit if nothing should trigger. |
 
 ### Notification Configuration
 
