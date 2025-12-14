@@ -2,7 +2,7 @@
 
 This is a module for [MagicMirror²](https://github.com/MagicMirrorOrg/MagicMirror) to act based on button presses via GPIO.
 
-![symbolization](symbolization.png)
+![symbolization](img/logo.png)
 
 It is capable of connecting multiple buttons at once, which can be individually configured.
 It is basically a generalized version of the [Button module](https://github.com/PtrBld/MMM-Button), original idea comes from @PtrBld.
@@ -56,41 +56,44 @@ The other does not do anything on a short press, but shuts down the system after
 
 ```js
     {
-        module: "MMM-Buttons",
-        position: "bottom_left",
-        config: {
-            buttons: [
-                {
-                    pin: 25,
-                    name: "monitor_control",
-                    longPress: [
-                        {
-                            notification: "REMOTE_ACTION",
-                            payload: {action: "MONITOROFF"}
-                        }
-                    ],
-                    shortPress: [
-                        {
-                            notification: "REMOTE_ACTION",
-                            payload: {action: "MONITORON"}
-                        }
-                    ]
-                },
-                {
-                    pin: 24,
-                    name: "power",
-                    longPress: [
-                        {
-                            title: "Power off",
-                            message: "Keep pressed for 3 seconds to shut down",
-                            imageFA: "power-off",
-                            notification: "REMOTE_ACTION",
-                            payload: {action: "SHUTDOWN"}
-                        }
-                    ]
-                }
+      module: "MMM-Buttons",
+      position: "bottom_left",
+      config: {
+        buttons: [
+          {
+            pin: 25,
+            name: "monitor_control",
+            longPress: [
+              {
+                title: "Monitor off",
+                message: "Keep pressed for 3 seconds to switch the monitor down",
+                imageFA: "display",
+                notification: "REMOTE_ACTION",
+                payload: {action: "MONITOROFF"}
+              }
+            ],
+            shortPress: [
+              {
+                notification: "REMOTE_ACTION",
+                payload: {action: "MONITORON"}
+              }
             ]
-        }
+          },
+          {
+            pin: 24,
+            name: "power",
+            longPress: [
+              {
+                title: "Power off",
+                message: "Keep pressed for 3 seconds to shut down",
+                imageFA: "power-off",
+                notification: "REMOTE_ACTION",
+                payload: {action: "SHUTDOWN"}
+              }
+            ]
+          }
+        ]
+      }
     },
 ```
 
@@ -108,6 +111,8 @@ Here is full documentation of options for the modules configuration:
 | `debugLimit` | How many events to keep in the debug list. Default is `5`. |
 
 **Debug View:** If you set a `position` for the module (e.g., `position: "bottom_left"`), a debug list will be displayed showing recent button events with timing and actions. This is useful for testing your button setup. Remove the `position` to hide the debug view.
+
+![Debug View](img/screenshot_debug_view.png)
 
 ### Button Configuration
 
@@ -130,3 +135,9 @@ Each notification configuration is an array of objects with the following proper
 | `notification` | Notification name. |
 | `payload` | Notification payload. Can be anything, for example a `string` or an `object`. |
 | `title`, `message`, and `imageFA` | *Optional (only for long press notifications):* If you want to display a message before executing set its options here. See [Alert documentation](https://github.com/MagicMirrorOrg/MagicMirror/tree/master/modules/default/alert#alert-params) for their meaning. |
+
+**Alert Examples:**
+
+| Monitor Off | Shutdown |
+| :---------: | :------: |
+| ![Alert Monitor Off](img/screenshot_alarm_monitoroff.png) | ![Alert Shutdown](img/screenshot_alarm_shutdown.png) |
