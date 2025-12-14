@@ -141,3 +141,22 @@ Each notification configuration is an array of objects with the following proper
 | Monitor Off | Shutdown |
 | :---------: | :------: |
 | ![Alert Monitor Off](img/screenshot_alarm_monitoroff.png) | ![Alert Shutdown](img/screenshot_alarm_shutdown.png) |
+
+## Contributing
+
+If you find any problems, bugs or have questions, please [open a GitHub issue](https://github.com/KristjanESPERANTO/MMM-SystemTemperature/issues) in this repository.
+
+Pull requests are of course also very welcome 🙂
+
+### Code of Conduct
+
+Please see the [Code of Conduct](CODE_OF_CONDUCT.md). By contributing you agree to its terms.
+
+### Developer commands
+
+- `node --run lint` - Run linting and formatter checks.
+- `node --run lint:fix` - Fix linting and formatter issues.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
