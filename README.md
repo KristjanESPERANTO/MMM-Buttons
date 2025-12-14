@@ -30,7 +30,7 @@ Clone this repository into your `modules` directory:
 
 ```bash
 cd ~/MagicMirror/modules # adapt directory if you are using a different one
-git clone https://github.com/MarcLandis/MMM-Buttons
+git clone https://github.com/KristjanESPERANTO/MMM-Buttons
 cd MMM-Buttons
 ```
 
