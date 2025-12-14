@@ -134,11 +134,15 @@ module.exports = NodeHelper.create({
         const chip = this.gpioChip;
         const pin = parseInt(button.pin, 10);
         const debounce = `${this.config.bounceTimeout}ms`;
+        const activeLow = button.activeLow !== false;
 
-        // gpiomon args for libgpiod 2.x with hardware debouncing
-        const args = ["-c", chip, "-p", debounce, String(pin)];
+        // gpiomon args for libgpiod 2.x with hardware debouncing and bias
+        const bias = activeLow
+            ? "pull-up"
+            : "pull-down";
+        const args = ["-c", chip, "-b", bias, "-p", debounce, String(pin)];
 
-        Log.log(`${this.name}: Starting gpiomon for pin ${pin} on ${chip} (debounce: ${debounce})`);
+        Log.log(`${this.name}: Starting gpiomon for pin ${pin} on ${chip} (bias: ${bias}, debounce: ${debounce})`);
 
         const monitor = spawn("gpiomon", args);
 
