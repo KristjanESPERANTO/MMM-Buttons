@@ -16,27 +16,22 @@ For example this can be used to send notifications to the following modules:
 
 ## Installation
 
-### Prerequisites
-
-This module uses `gpiod` tools for GPIO access, which is usually pre-installed on Raspberry Pi OS. If not, you can install it with:
-
-```bash
-sudo apt install gpiod
-```
-
-### Install the module
-
 Clone this repository into your `modules` directory:
 
 ```bash
 cd ~/MagicMirror/modules # adapt directory if you are using a different one
 git clone https://github.com/KristjanESPERANTO/MMM-Buttons
-cd MMM-Buttons
 ```
 
 That's it! No `npm install` needed - this module has no external Node.js dependencies.
 
-### Update the module
+**Note:**This module uses `gpiod` tools for GPIO access, which is usually pre-installed on Raspberry Pi OS. If not, you can install it with:
+
+```bash
+sudo apt install gpiod
+```
+
+## Update
 
 To update the module, navigate to the module directory and pull the latest changes from GitHub:
 
