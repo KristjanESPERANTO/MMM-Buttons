@@ -6,6 +6,7 @@
     "type": "git",
     "url": "git+https://github.com/jopyth/MMM-Buttons"
   },
+  "type": "commonjs",
   "keywords": [
     "MagicMirror",
     "smart mirror",
@@ -13,14 +14,17 @@
     "module"
   ],
   "author": "Joseph Bethge",
-  "contributors": [
-    "https://github.com/jopyth/MMM-Buttons/graphs/contributors"
-  ],
+ 	"contributors": [
+		{
+			"name": "Contributors",
+			"url": "https://github.com/jopyth/MMM-Buttons/graphs/contributors"
+		}
+	],
   "license": "MIT",
   "bugs": {
     "url": "git+https://github.com/jopyth/MMM-Buttons/issues"
   },
-  "homepage": "git+https://github.com/jopyth/MMM-Buttons#readme",
+  "homepage": "https://github.com/jopyth/MMM-Buttons#readme",
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@eslint/markdown": "^7.5.1",
