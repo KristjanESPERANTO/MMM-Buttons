@@ -9,9 +9,10 @@
   "type": "commonjs",
   "keywords": [
     "MagicMirror",
-    "smart mirror",
+    "module",
     "buttons",
-    "module"
+    "GPIO",
+    "notifications"
   ],
   "author": "Joseph Bethge",
  	"contributors": [
