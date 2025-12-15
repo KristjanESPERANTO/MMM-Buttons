@@ -2,7 +2,7 @@
 
 This is a module for [MagicMirror²](https://github.com/MagicMirrorOrg/MagicMirror) to act based on button presses via GPIO.
 
-![symbolization](img/logo.png)
+![logo](img/logo_no_screenshot.png)
 
 It is capable of connecting multiple buttons at once, which can be individually configured.
 It is basically a generalized version of the [Button module](https://github.com/PtrBld/MMM-Button), original idea comes from @PtrBld.
