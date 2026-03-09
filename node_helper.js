@@ -32,12 +32,29 @@ module.exports = NodeHelper.create({
         // Check if gpiomon is installed (command -v is a POSIX shell built-in, works without `which`)
         try {
             execSync("command -v gpiomon", {stdio: "ignore"});
+            this.gpiodVersion = this.getGpiodVersion();
             return true;
         } catch {
             Log.error(`${this.name}: gpiod tools not found!`);
             Log.error(`${this.name}: Install with: sudo apt install gpiod`);
             return false;
         }
+    },
+
+    getGpiodVersion () {
+        try {
+            const output = execSync("gpiomon --version", {encoding: "utf8"});
+            const match = output.match(/v(?<major>\d+)\./u);
+            if (match) {
+                const version = parseInt(match.groups.major, 10);
+                Log.log(`${this.name}: Detected libgpiod v${version}.x`);
+                return version;
+            }
+        } catch {
+            // ignore
+        }
+        Log.log(`${this.name}: Could not detect libgpiod version, assuming v2`);
+        return 2;
     },
 
     // Subclass socketNotificationReceived received.
@@ -116,10 +133,12 @@ module.exports = NodeHelper.create({
         const lines = data.toString().trim().split("\n");
         for (const line of lines) {
             Log.debug(`${this.name}: gpiomon output for pin ${pin}: ${line}`);
+            // Handle both libgpiod v2 ("rising"/"falling") and v1 ("RISING EDGE"/"FALLING EDGE") output formats
+            const lowerLine = line.toLowerCase();
             let edge = null;
-            if (line.includes("rising")) {
+            if (lowerLine.includes("rising")) {
                 edge = "rising";
-            } else if (line.includes("falling")) {
+            } else if (lowerLine.includes("falling")) {
                 edge = "falling";
             }
             if (edge) {
@@ -136,13 +155,22 @@ module.exports = NodeHelper.create({
         const debounce = `${this.config.bounceTimeout}ms`;
         const activeLow = button.activeLow !== false;
 
-        // gpiomon args for libgpiod 2.x with hardware debouncing and bias
         const bias = activeLow
             ? "pull-up"
             : "pull-down";
-        const args = ["-c", chip, "-b", bias, "-p", debounce, String(pin)];
 
-        Log.log(`${this.name}: Starting gpiomon for pin ${pin} on ${chip} (bias: ${bias}, debounce: ${debounce})`);
+        const isV2 = this.gpiodVersion >= 2;
+        if (isV2) {
+            // libgpiod 2.x: supports -c <chip>, -b <bias>, -p <debounce-period>
+            Log.log(`${this.name}: Starting gpiomon for pin ${pin} on ${chip} (bias: ${bias}, debounce: ${debounce})`);
+        } else {
+            // libgpiod 1.x: chip is positional, no hardware debounce support
+            Log.warn(`${this.name}: libgpiod v1.x - hardware debouncing not supported`);
+            Log.log(`${this.name}: Starting gpiomon for pin ${pin} on ${chip} (bias: ${bias})`);
+        }
+        const args = isV2
+            ? ["-c", chip, "-b", bias, "-p", debounce, String(pin)]
+            : ["-B", bias, chip, String(pin)];
 
         const monitor = spawn("gpiomon", args);
 
