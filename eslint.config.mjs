@@ -16,8 +16,7 @@ export default defineConfig([
                 Module: "readonly"
             }
         },
-        plugins: {js, stylistic},
-        extends: ["js/all", "stylistic/all"],
+        extends: [js.configs.all, stylistic.configs.all],
         rules: {
             "@stylistic/array-element-newline": ["error", "consistent"],
             "@stylistic/function-call-argument-newline": ["error", "consistent"],
