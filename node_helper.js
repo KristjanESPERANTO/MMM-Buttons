@@ -25,7 +25,7 @@ module.exports = NodeHelper.create({
     checkGpioAvailable () {
         // Check if we're on Linux
         if (process.platform !== "linux") {
-            Log.warn(`${this.name}: Not running on Linux - GPIO functionality disabled`);
+            Log.warn("Not running on Linux - GPIO functionality disabled");
             return false;
         }
 
@@ -35,8 +35,8 @@ module.exports = NodeHelper.create({
             this.gpiodVersion = this.getGpiodVersion();
             return true;
         } catch {
-            Log.error(`${this.name}: gpiod tools not found!`);
-            Log.error(`${this.name}: Install with: sudo apt install gpiod`);
+            Log.error("gpiod tools not found!");
+            Log.error("Install with: sudo apt install gpiod");
             return false;
         }
     },
@@ -47,13 +47,13 @@ module.exports = NodeHelper.create({
             const match = output.match(/v(?<major>\d+)\./u);
             if (match) {
                 const version = parseInt(match.groups.major, 10);
-                Log.log(`${this.name}: Detected libgpiod v${version}.x`);
+                Log.log(`Detected libgpiod v${version}.x`);
                 return version;
             }
         } catch {
             // ignore
         }
-        Log.log(`${this.name}: Could not detect libgpiod version, assuming v2`);
+        Log.log("Could not detect libgpiod version, assuming v2");
         return 2;
     },
 
@@ -91,13 +91,13 @@ module.exports = NodeHelper.create({
 
         if (isPress) {
             button.pressed = now;
-            Log.debug(`${this.name}: Button ${index} (${button.name}) pressed`);
+            Log.debug(`Button ${index} (${button.name}) pressed`);
             this.sendSocketNotification("BUTTON_DOWN", {index});
         } else if (button.pressed !== null) {
             const duration = now - button.pressed;
             button.pressed = null;
 
-            Log.debug(`${this.name}: Button ${index} (${button.name}) released after ${duration}ms`);
+            Log.debug(`Button ${index} (${button.name}) released after ${duration}ms`);
             this.sendSocketNotification("BUTTON_UP", {
                 index,
                 duration
@@ -118,7 +118,7 @@ module.exports = NodeHelper.create({
         }
 
         if (model.startsWith("Raspberry Pi 5")) {
-            Log.log(`${this.name}: RPi5 detected, using gpiochip4`);
+            Log.log("RPi5 detected, using gpiochip4");
             return "gpiochip4";
         }
 
@@ -132,7 +132,7 @@ module.exports = NodeHelper.create({
          */
         const lines = data.toString().trim().split("\n");
         for (const line of lines) {
-            Log.debug(`${this.name}: gpiomon output for pin ${pin}: ${line}`);
+            Log.debug(`gpiomon output for pin ${pin}: ${line}`);
             // Handle both libgpiod v2 ("rising"/"falling") and v1 ("RISING EDGE"/"FALLING EDGE") output formats
             const lowerLine = line.toLowerCase();
             let edge = null;
@@ -142,7 +142,7 @@ module.exports = NodeHelper.create({
                 edge = "falling";
             }
             if (edge) {
-                Log.debug(`${this.name}: GPIO event on pin ${pin}: ${edge}`);
+                Log.debug(`GPIO event on pin ${pin}: ${edge}`);
                 this.handleGpioEvent(index, edge);
             }
         }
@@ -162,11 +162,11 @@ module.exports = NodeHelper.create({
         const isV2 = this.gpiodVersion >= 2;
         if (isV2) {
             // libgpiod 2.x: supports -c <chip>, -b <bias>, -p <debounce-period>
-            Log.log(`${this.name}: Starting gpiomon for pin ${pin} on ${chip} (bias: ${bias}, debounce: ${debounce})`);
+            Log.log(`Starting gpiomon for pin ${pin} on ${chip} (bias: ${bias}, debounce: ${debounce})`);
         } else {
             // libgpiod 1.x: chip is positional, no hardware debounce support
-            Log.warn(`${this.name}: libgpiod v1.x - hardware debouncing not supported`);
-            Log.log(`${this.name}: Starting gpiomon for pin ${pin} on ${chip} (bias: ${bias})`);
+            Log.warn("libgpiod v1.x - hardware debouncing not supported");
+            Log.log(`Starting gpiomon for pin ${pin} on ${chip} (bias: ${bias})`);
         }
         const args = isV2
             ? ["-c", chip, "-b", bias, "-p", debounce, String(pin)]
@@ -177,18 +177,18 @@ module.exports = NodeHelper.create({
         monitor.stdout.on("data", (data) => this.parseGpiomonOutput(data, index, pin));
 
         monitor.stderr.on("data", (data) => {
-            Log.error(`${this.name}: gpiomon error for pin ${pin}: ${data.toString()}`);
+            Log.error(`gpiomon error for pin ${pin}: ${data.toString()}`);
         });
 
         monitor.on("close", (code) => {
             if (code !== null && code !== 0) {
-                Log.error(`${this.name}: gpiomon for pin ${pin} exited with code ${code}`);
+                Log.error(`gpiomon for pin ${pin} exited with code ${code}`);
             }
         });
 
         monitor.on("error", (err) => {
-            Log.error(`${this.name}: Failed to start gpiomon for pin ${pin}: ${err.message}`);
-            Log.error(`${this.name}: Make sure gpiod is installed: sudo apt install gpiod`);
+            Log.error(`Failed to start gpiomon for pin ${pin}: ${err.message}`);
+            Log.error("Make sure gpiod is installed: sudo apt install gpiod");
         });
 
         this.monitors.push({pin, process: monitor});
@@ -200,7 +200,7 @@ module.exports = NodeHelper.create({
         }
 
         if (!this.gpioAvailable) {
-            Log.warn(`${this.name}: Skipping button initialization - GPIO not available`);
+            Log.warn("Skipping button initialization - GPIO not available");
             return;
         }
 
