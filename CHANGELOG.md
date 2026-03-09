@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.1.1](https://github.com/jopyth/MMM-Buttons/compare/v2.1.0...v2.1.1) (2026-03-09)
+
+
+### Bug Fixes
+
+* add libgpiod v1.x compatibility ([1134374](https://github.com/jopyth/MMM-Buttons/commit/11343744a84c96b2457a656c02c49cc837049188)), closes [#1](https://github.com/jopyth/MMM-Buttons/issues/1)
+* replace `which gpiomon` with `command -v gpiomon` ([fdef03e](https://github.com/jopyth/MMM-Buttons/commit/fdef03e8a41b00402ae7782bb7b8e8db19895a9c)), closes [#2](https://github.com/jopyth/MMM-Buttons/issues/2)
+
+
+### Maintenance
+
+* add lint-staged and simple-git-hooks for pre-commit linting ([e11cbbe](https://github.com/jopyth/MMM-Buttons/commit/e11cbbe18a1631a320f95e73e4635142b856bb49))
+* add missing devDependency @eslint/js ([c2304ba](https://github.com/jopyth/MMM-Buttons/commit/c2304bae66b4747e2526da2820d95083f08a97b8))
+* add type + correct homepage and contributors format ([22ee792](https://github.com/jopyth/MMM-Buttons/commit/22ee7925ecf7c5fd38565db8a256e17a541ec76b))
+* rename logo image to get it into the module list ([627adbd](https://github.com/jopyth/MMM-Buttons/commit/627adbdfb0c85353c644a7b673bdf6269b3315eb))
+* update devDependencies ([c19d1b1](https://github.com/jopyth/MMM-Buttons/commit/c19d1b1fe6ae50767613ffa1f0914a66cb4a43d6))
+* update ESLint config ([ff4765a](https://github.com/jopyth/MMM-Buttons/commit/ff4765a84a81ba1539c5de914422ae1982fed7dc))
+* update keywords in package.json ([e53fbb1](https://github.com/jopyth/MMM-Buttons/commit/e53fbb1eec6667a6fad635f0bef3fc09efc70269))
+
+
+### Documentation
+
+* reorganize installation instructions ([b7aa52e](https://github.com/jopyth/MMM-Buttons/commit/b7aa52e7d429e4e4fe707333efbb34a9a714daa8))
+
 ## [2.1.0](https://github.com/jopyth/MMM-Buttons/compare/v2.0.0...v2.1.0) (2025-12-14)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "mmm-buttons",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "A module for connecting multiple buttons.",
   "repository": {
     "type": "git",
@@ -15,12 +15,12 @@
     "notifications"
   ],
   "author": "Joseph Bethge",
- 	"contributors": [
-		{
-			"name": "Contributors",
-			"url": "https://github.com/jopyth/MMM-Buttons/graphs/contributors"
-		}
-	],
+  "contributors": [
+    {
+      "name": "Contributors",
+      "url": "https://github.com/jopyth/MMM-Buttons/graphs/contributors"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "git+https://github.com/jopyth/MMM-Buttons/issues"
