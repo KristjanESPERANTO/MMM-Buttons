@@ -29,9 +29,9 @@ module.exports = NodeHelper.create({
             return false;
         }
 
-        // Check if gpiomon is installed
+        // Check if gpiomon is installed (command -v is a POSIX shell built-in, works without `which`)
         try {
-            execSync("which gpiomon", {stdio: "ignore"});
+            execSync("command -v gpiomon", {stdio: "ignore"});
             return true;
         } catch {
             Log.error(`${this.name}: gpiod tools not found!`);
