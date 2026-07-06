@@ -4,7 +4,7 @@
   "description": "A module for connecting multiple buttons.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jopyth/MMM-Buttons"
+    "url": "git+https://github.com/MagicMirrorModules/MMM-Buttons.git"
   },
   "type": "commonjs",
   "keywords": [
@@ -18,14 +18,14 @@
   "contributors": [
     {
       "name": "Contributors",
-      "url": "https://github.com/jopyth/MMM-Buttons/graphs/contributors"
+      "url": "https://github.com/MagicMirrorModules/MMM-Buttons/graphs/contributors?all=1"
     }
   ],
   "license": "MIT",
   "bugs": {
-    "url": "git+https://github.com/jopyth/MMM-Buttons/issues"
+    "url": "https://github.com/MagicMirrorModules/MMM-Buttons/issues"
   },
-  "homepage": "https://github.com/jopyth/MMM-Buttons#readme",
+  "homepage": "https://github.com/MagicMirrorModules/MMM-Buttons#readme",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@eslint/markdown": "^7.5.1",

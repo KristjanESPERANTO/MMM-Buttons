@@ -139,7 +139,7 @@ Each notification configuration is an array of objects with the following proper
 
 ## Contributing
 
-If you find any problems, bugs or have questions, please [open a GitHub issue](https://github.com/KristjanESPERANTO/MMM-SystemTemperature/issues) in this repository.
+If you find any problems, bugs or have questions, please [open a GitHub issue](https://github.com/MagicMirrorModules/MMM-Buttons/issues) in this repository.
 
 Pull requests are of course also very welcome 🙂
 
