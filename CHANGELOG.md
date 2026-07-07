@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.1.2](https://github.com/MagicMirrorModules/MMM-Buttons/compare/v2.1.1...v2.1.2) (2026-07-07)
+
+
+### Maintenance
+
+* update devDependencies ([2c0f04f](https://github.com/MagicMirrorModules/MMM-Buttons/commit/2c0f04ffdd7c1be0b0d7a502456e1cd8d4217734))
+* update repository URLs ([e4686f1](https://github.com/MagicMirrorModules/MMM-Buttons/commit/e4686f1763e9923497583422f0dc07130d49b4ca))
+
+
+### Code Refactoring
+
+* simplify log messages by removing context prefix ([05db2d2](https://github.com/MagicMirrorModules/MMM-Buttons/commit/05db2d24969cba8142bb8f4b8ed9a23151a69893))
+
 ## [2.1.1](https://github.com/jopyth/MMM-Buttons/compare/v2.1.0...v2.1.1) (2026-03-09)
 
 
